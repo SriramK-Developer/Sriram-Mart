@@ -13,6 +13,11 @@ RUN useradd --system --create-home srirammart && mkdir -p /app/data /app/uploads
 COPY --from=build /src/target/srirammart-1.0.0.jar /app/app.jar
 USER srirammart
 ENV UPLOAD_DIR=/app/uploads
-EXPOSE 8080
+
+# 1. CHANGE THIS FROM 8080 TO 10000
+EXPOSE 10000
+
 VOLUME ["/app/data", "/app/uploads"]
-ENTRYPOINT ["java", "-XX:MaxRAMPercentage=75", "-jar", "/app/app.jar"]
+
+# 2. OPTIONAL BUT RECOMMENDED: Force Spring to read the PORT variable directly at entrypoint
+ENTRYPOINT ["java", "-XX:MaxRAMPercentage=75", "-Dserver.port=${PORT:10000}", "-jar", "/app/app.jar"]
